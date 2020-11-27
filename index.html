@@ -319,7 +319,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-26 09:39:30" itemprop="dateModified" datetime="2020-11-26T09:39:30+08:00">2020-11-26</time>
+                <time title="Modified: 2020-11-27 14:21:34" itemprop="dateModified" datetime="2020-11-27T14:21:34+08:00">2020-11-27</time>
               </span>
 
           
@@ -334,15 +334,14 @@
 
       
           <h3 id="webpack打包后的文件"><a href="#webpack打包后的文件" class="headerlink" title="webpack打包后的文件"></a>webpack打包后的文件</h3><p>webpack打包输出后的结果默认是一个匿名自执行函数，匿名自执行函数传递的参数为一个对象，<strong>对象的属性名为入口文件的路径名</strong>，<strong>属性值为一个函数</strong>，函数体内部通过会执行eval()，<strong>eval()方法的参数为入口文件的内容字符串</strong>，而这个匿名自执行函数，内部有一个自定义的__webpack_require__方法，该方法需要传入<strong>入口文件的路径名</strong>作为参数，匿名自执行函数执行完成后会<strong>返回__webpack_require__的结果</strong>，而__webpack_require__()方法内部执行的时候，会首先<strong>创建一个module对象</strong>，<strong>module对象里面有exports属性，属性值为一个空的对象，用于接收入口文件的模块输出</strong>，如:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">modules</span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123; <span class="comment">// 传入入口文件的路径</span></span><br><span class="line">        <span class="keyword">var</span> <span class="built_in">module</span> = installedModules[moduleId] = &#123; <span class="comment">// 创建一个module对象</span></span><br><span class="line">             i: moduleId,</span><br><span class="line">             l: <span class="literal">false</span>,</span><br><span class="line">             <span class="built_in">exports</span>: &#123;&#125; <span class="comment">// exports对象用于保存入口文件的导出结果</span></span><br><span class="line">         &#125;;</span><br><span class="line">        modules[moduleId].call(<span class="built_in">module</span>.exports, <span class="built_in">module</span>, <span class="built_in">module</span>.exports, __webpack_require__); <span class="comment">// 执行入口文件</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">module</span>.exports; <span class="comment">// 返回模块输出结果</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> __webpack_require__(__webpack_require__.s = <span class="string">&quot;./src/bar.js&quot;</span>); <span class="comment">// 返回入口文件</span></span><br><span class="line">&#125;)(&#123;</span><br><span class="line">     <span class="string">&quot;./src/bar.js&quot;</span>: (<span class="function"><span class="keyword">function</span>(<span class="params"><span class="built_in">module</span>, <span class="built_in">exports</span></span>) </span>&#123;</span><br><span class="line">         <span class="built_in">eval</span>(<span class="string">&quot;module.exports = \&quot;bar\&quot;;&quot;</span>);</span><br><span class="line">     &#125;)</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="webpack中html的处理"><a href="#webpack中html的处理" class="headerlink" title="webpack中html的处理"></a>webpack中html的处理</h3><p>webpack在不使用插件的时候只能打包输出js文件，如果我们想输出其他格式的文件到输出目录中，我们就要使用插件 <strong>html-webpack-plugin</strong> 会将html打包到输出目录中并让html文件自动引入打包后的js文件。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            template: <span class="string">&quot;./index.html&quot;</span>, <span class="comment">// 要打包输出哪个文件，可以使用相对路径</span></span><br><span class="line">            filename: <span class="string">&quot;index.html&quot;</span>, <span class="comment">// 打包输出后该html文件的名称</span></span><br><span class="line">            minify: &#123;</span><br><span class="line">                removeAttributeQuotes: <span class="literal">true</span>, <span class="comment">// 去除html文件中的引号</span></span><br><span class="line">                collapseWhitespace: <span class="literal">true</span> <span class="comment">// 合并空格，即将html进行单行显示</span></span><br><span class="line">            &#125;,</span><br><span class="line">            hash: <span class="literal">true</span> <span class="comment">// 向html文件中引入打包后的js时候带上hash值</span></span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;main.js?c7086a400fa368e84ad6&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="webpack中css的处理"><a href="#webpack中css的处理" class="headerlink" title="webpack中css的处理"></a>webpack中css的处理</h3><p>webpack是将所有格式都当做模块进行处理。如果在js中通过require引入了其他格式的文件，webpack必须通过安装合适的模块loader，才能正确的解析模块的内容，webpack有一个module属性，用于进行模块解析器的配置，它的属性值是一个对象，对象中有一个rules属性，它的属性值是一个对象数组，数组中的对象主要完成两件事：test:正则表达式，用力匹配对应格式的文件。use:用于配置多个模块加载器的，只有一个就是字符串，多个就是数组，如果模块加载器需要额外配置，数组里面的元素可以是对象</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/22/webpack%EF%BC%88%E4%BA%8C%EF%BC%89/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -392,7 +391,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-26 09:39:30" itemprop="dateModified" datetime="2020-11-26T09:39:30+08:00">2020-11-26</time>
+                <time title="Modified: 2020-11-27 14:21:34" itemprop="dateModified" datetime="2020-11-27T14:21:34+08:00">2020-11-27</time>
               </span>
 
           
@@ -407,35 +406,14 @@
 
       
           <h3 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h3><p>这个函数是用来汇总数据的（加和）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> customer = [</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">1</span>, <span class="attr">count</span>: <span class="number">2</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">2</span>, <span class="attr">count</span>: <span class="number">3</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">3</span>, <span class="attr">count</span>: <span class="number">1</span>&#125;</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> totalCount = customer.reduce(<span class="function">(<span class="params">total, item</span>) =&gt;</span> total + item.count,</span><br><span class="line">  <span class="number">0</span> <span class="comment">// total 的初始值</span></span><br><span class="line">); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-
-<p>2.将一个复杂对象处理为简单对象</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> products = [</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">    name: <span class="string">&#x27;a&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line">    name: <span class="string">&#x27;b&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> productsById = products.reduce(</span><br><span class="line">  (obj, product) =&gt; <span class="built_in">Object</span>.assign(obj,&#123;[product.id]:product.name&#125;),</span><br><span class="line">  &#123;&#125;</span><br><span class="line">);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;result&#x27;</span>, productsById);</span><br></pre></td></tr></table></figure>
-
-<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p>map对数组中的每个数据进行处理，然后返回一个新的数组</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> integers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">7</span>];</span><br><span class="line"><span class="keyword">const</span> twoXIntegers = integers.map(<span class="function"><span class="params">i</span> =&gt;</span> i*<span class="number">2</span>);</span><br><span class="line"><span class="comment">// [2, 4, 6, 8, 12, 14]</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>从数组中找出一个元素</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> posts = [</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 1&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 2&#x27;</span>&#125;,</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> title = posts.find(<span class="function"><span class="params">p</span> =&gt;</span> p.id === <span class="number">1</span>).title;</span><br><span class="line"><span class="comment">// Title 1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h3><p>筛选出数组中某些符合条件的元素</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> integers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">7</span>];</span><br><span class="line"><span class="keyword">const</span> evenIntegers = integers.filter(<span class="function"><span class="params">i</span> =&gt;</span> i % <span class="number">2</span> === <span class="number">0</span>);</span><br><span class="line"><span class="comment">// [2, 4, 6]</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="取代concat"><a href="#取代concat" class="headerlink" title="取代concat"></a>取代concat</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [...arr1, ...arr2];</span><br></pre></td></tr></table></figure>
-
-<h3 id="合并对象"><a href="#合并对象" class="headerlink" title="合并对象"></a>合并对象</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> param = &#123;...param1, ...param2&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="给对象添加字段"><a href="#给对象添加字段" class="headerlink" title="给对象添加字段"></a>给对象添加字段</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> products = [</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">    name: <span class="string">&#x27;a&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line">    name: <span class="string">&#x27;b&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> productsById = products.reduce(</span><br><span class="line">  (obj, product) =&gt; <span class="built_in">Object</span>.assign(obj,&#123;[product.id]:product.name&#125;),</span><br><span class="line">  &#123;&#125;</span><br><span class="line">);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;result&#x27;</span>, productsById);</span><br></pre></td></tr></table></figure>
-
-<p>将对象转为query字符串</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> params = &#123;<span class="attr">color</span>: <span class="string">&#x27;red&#x27;</span>, <span class="attr">minPrice</span>: <span class="number">8000</span>, <span class="attr">maxPrice</span>: <span class="number">10000</span>&#125;;</span><br><span class="line"><span class="keyword">const</span> query = <span class="string">&#x27;?&#x27;</span> + <span class="built_in">Object</span>.keys(params).map(<span class="function"><span class="params">k</span> =&gt;</span><span class="built_in">encodeURIComponent</span>(k) + <span class="string">&#x27;=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(params[k])).join(<span class="string">&#x27;&amp;&#x27;</span>)</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
-
-<h3 id="获取数组元素位置"><a href="#获取数组元素位置" class="headerlink" title="获取数组元素位置"></a>获取数组元素位置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> posts = [</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">13</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 221&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">5</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 102&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">131</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 18&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">id</span>: <span class="number">55</span>, <span class="attr">title</span>: <span class="string">&#x27;Title 234&#x27;</span>&#125;</span><br><span class="line">];</span><br><span class="line"><span class="keyword">const</span> index = posts.findIndex(<span class="function"><span class="params">p</span> =&gt;</span> p.id === <span class="number">131</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="删除对象的某个属性"><a href="#删除对象的某个属性" class="headerlink" title="删除对象的某个属性"></a>删除对象的某个属性</h3><p>利用结构赋值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const list &#x3D; &#123;a: &#39;a&#39;, b: &#39;b&#39;, c: &#39;c&#39;&#125;;</span><br><span class="line">const &#123;d, ...a&#125; &#x3D; list</span><br></pre></td></tr></table></figure>
-
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/09/09/%E6%8D%A2%E7%A7%8D%E6%80%9D%E8%B7%AF%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -485,7 +463,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-26 09:38:00" itemprop="dateModified" datetime="2020-11-26T09:38:00+08:00">2020-11-26</time>
+                <time title="Modified: 2020-11-27 14:21:34" itemprop="dateModified" datetime="2020-11-27T14:21:34+08:00">2020-11-27</time>
               </span>
 
           
@@ -501,69 +479,14 @@
       
           <h1 id="webpack（一）"><a href="#webpack（一）" class="headerlink" title="webpack（一）"></a>webpack（一）</h1><h2 id="webpack简介"><a href="#webpack简介" class="headerlink" title="webpack简介"></a>webpack简介</h2><p>webpack是一个JavaScript静态代码打包工具，它会递归的构建一个依赖关系图，这其中包括应用程序的每个模块，然后把这些模块打成一个或者多个包。</p>
 <hr>
-<p>webpack的主要作用就是分析你项目的结构，找到你的JavaScript模块以及一些浏览器不能直接识别的扩展语言（sass，less，ts等），然后将它们编译打包成适合浏览器的格式。</p>
-<p>webpack主要的功能：</p>
-<table>
-<thead>
-<tr>
-<th>代码转换</th>
-<th>es6=&gt;es5 sass/less=&gt;css</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>文件优化</td>
-<td>压缩代码</td>
-</tr>
-<tr>
-<td>代码分割</td>
-<td>将公共模块抽出、路由分模块打包</td>
-</tr>
-<tr>
-<td>模块合并</td>
-<td>将不同功能的模块合并为一个模块</td>
-</tr>
-<tr>
-<td>自动刷新</td>
-<td>启动本地服务，代码更新后自动刷新</td>
-</tr>
-<tr>
-<td>代码校验</td>
-<td>eslint</td>
-</tr>
-<tr>
-<td>自动发布</td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="webpack安装"><a href="#webpack安装" class="headerlink" title="webpack安装"></a>webpack安装</h2><p>主要要注意的问题是：在webpack3中，webpack和它的cli在同一个包里面，但是在webpack4中，为了更好的管理，已经将这它们两个分开来了，所以在安装webpack4的时候需要注意的是需要手动安装wepack-cli</p>
-<h2 id="webpack基础配置"><a href="#webpack基础配置" class="headerlink" title="webpack基础配置"></a>webpack基础配置</h2><p>webpack其实在不配置任何东西的时候就可以完成打包任务，默认入口是项目根目录下的src/index.js，默认出口为项目根目录底下的dist/main.js</p>
-<blockquote>
-<p>如果没有给webpack添加配置文件，那么webpack的打包能力就会非常弱，webpack执行的时候默认会加载项目根目录下的webpack.config.js文件，注意，<strong>该配置文件是一个js文件，而不是json文件，并且其是通过node去执行的，所以其完全支持node语法，即node中能用的，在配置文件中都可以用</strong></p>
-</blockquote>
-<blockquote>
-<p>webpack配置文件必须要对外暴露一个对象，即通过module.exports进行对外暴露，其中的所有配置都必须写在这个对外暴露的对象中。</p>
-</blockquote>
-<h3 id="context"><a href="#context" class="headerlink" title="context"></a>context</h3><p>context属性表示的是webpack的上下文目录，配置入口文件的时候，如果入口文件是使用的相对路径，那就是相对于context所在的目录。</p>
-<blockquote>
-<p>context默认值为执行webpack命令时所在的当前工作目录，通常是在项目根目录下执行webpack命令，所以可以认为其值默认为项目根目录，所以如果入口文件路径写成相对路径，最好将context配置成context:path.resolve(__dirname)，以防止在非项目根目录下执行webpack命令时找不到入口文件路径而报错。</p>
-</blockquote>
-<h3 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h3><p>entry用于配置模块的入口文件，当然也可以配置多个入口（字符串或数组或对象），但是不能不配置，如果没有入口文件的话是会报错的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单个字符串的入口文件，输出文件取决于output的配置</span></span><br><span class="line">entry:<span class="string">&quot;./index.js&quot;</span></span><br><span class="line"><span class="comment">// 两个入口文件，会将两个文件打包成一个文件，并且在output配置的目录中输出</span></span><br><span class="line">entry:[<span class="string">&quot;./index1.js&quot;</span>,<span class="string">&quot;./index2.js&quot;</span>]</span><br><span class="line"><span class="comment">// output不能再配置成文件名称，因为在entry配置中已经确定了输出文件的名字为a/b/c</span></span><br><span class="line">entry:&#123;</span><br><span class="line">	a: <span class="string">&quot;./index1.js&quot;</span>,</span><br><span class="line">	b: <span class="string">&quot;./index2.js&quot;</span>,</span><br><span class="line">	c: <span class="string">&quot;./index3.js&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<h5 id="chunk和module的区别，二者都是表示模块，但是module可以看做是具有独立功能的小模块，即小块，也就是打包之前，程序员编写的一个一个的文件，每个文件称为一个module；而chunk则可以看做是由多个小module打包成的大模块，即大块"><a href="#chunk和module的区别，二者都是表示模块，但是module可以看做是具有独立功能的小模块，即小块，也就是打包之前，程序员编写的一个一个的文件，每个文件称为一个module；而chunk则可以看做是由多个小module打包成的大模块，即大块" class="headerlink" title="chunk和module的区别，二者都是表示模块，但是module可以看做是具有独立功能的小模块，即小块，也就是打包之前，程序员编写的一个一个的文件，每个文件称为一个module；而chunk则可以看做是由多个小module打包成的大模块，即大块"></a>chunk和module的区别，二者都是表示模块，但是module可以看做是具有独立功能的小模块，即<strong>小块</strong>，也就是打包之前，程序员编写的一个一个的文件，每个文件称为一个module；而chunk则可以看做是由多个小module打包成的大模块，即<strong>大块</strong></h5></blockquote>
-<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><p>output配置是用来配置打包后的代码最终想要输出的位置，是一个对象</p>
-<p><strong>path</strong>：用于配置输出文件的最终位置，必须是绝对路径，如果没有配置的话会在webpack命令执行时所在的目录下自动创建一个dist目录，并将打包结果输出到dist目录下，<strong>与context的配置路径无关</strong></p>
-<p><strong>filename</strong>: 用于配置输出文件的名称，如果只有一个输出文件，可以配置成静态不变的文件名。但是如果有多个chunk要输出的时候（配置了多个入口文件），filename必须借助模板和变量。</p>
-<p><strong>publicPath</strong>: 用于配置打包资源发布到线上的url地址，打包完成后，html中如果引用了js，图片，css等资源，就会在前面加上publicPath表示路径。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.export = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    <span class="comment">// 必须是绝对路径</span></span><br><span class="line">    path: path.resolve(__dirname, <span class="string">&quot;./dist&quot;</span>)，</span><br><span class="line">    <span class="comment">// 只有一个输出文件</span></span><br><span class="line">    <span class="comment">// filename: &quot;bundle.js&quot;，</span></span><br><span class="line">    <span class="comment">// 有多个输出文件 [name]自动获取入口文件配置的chunk名称； [hash]自动生成hash值，可以指定hash长度，默认20位</span></span><br><span class="line">    filename: <span class="string">&quot;[name][hash:8].js&quot;</span></span><br><span class="line">    publicPath: <span class="string">&quot;http://www.test.com/&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="webpack本地服务器"><a href="#webpack本地服务器" class="headerlink" title="webpack本地服务器"></a>webpack本地服务器</h2><p>webpack还能启动本地http服务器，使用这个功能需要安装webpack-dev-server，webpack-dev-server会启动一个Web服务器来接收网页的请求，也可以监听文件的变化自动刷新网页。</p>
-<p>webpack-dev-server会忽略文件中的output。path配置，将其打包输出结果保存到内存中，webpack-dev-server会默认设置启动DevServer时所在目录为根目录，启动命令为npx webpack-dev-server。</p>
-<h3 id="devServer配置"><a href="#devServer配置" class="headerlink" title="devServer配置"></a>devServer配置</h3><p>webpack可以通过devServer配置服务器的一些属性</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        port: <span class="number">3000</span>, <span class="comment">// 让devServer监听3000端口</span></span><br><span class="line">        contentBase: <span class="string">&quot;./dist&quot;</span>, <span class="comment">// 将当前项目的dist目录作为devServer的根目录</span></span><br><span class="line">        progress: <span class="literal">true</span>, <span class="comment">// 显示打包进度条</span></span><br><span class="line">        compress: <span class="literal">true</span> <span class="comment">// 是否启用Gzip压缩，默认为false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/09/01/webpack%E7%AE%80%E4%BB%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -613,7 +536,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-26 09:41:07" itemprop="dateModified" datetime="2020-11-26T09:41:07+08:00">2020-11-26</time>
+                <time title="Modified: 2020-11-27 14:21:34" itemprop="dateModified" datetime="2020-11-27T14:21:34+08:00">2020-11-27</time>
               </span>
 
           
@@ -628,36 +551,15 @@
 
       
           <h1 id="从零实现一个react-jsx-amp-虚拟dom"><a href="#从零实现一个react-jsx-amp-虚拟dom" class="headerlink" title="从零实现一个react  jsx&amp;虚拟dom"></a>从零实现一个react  jsx&amp;虚拟dom</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>目前项目的技术选型是react，女朋友的毕业设计可能选择前端框架的实现，所以想研究一下react的源码，也正好看到一篇文章，<a target="_blank" rel="noopener" href="https://github.com/hujiulong/blog/issues/4">从零实现react</a>，所以也想学着实现一个react，从实现的过程去理解react的设计思想和核心代码。</p>
-<h2 id="jsx"><a href="#jsx" class="headerlink" title="jsx"></a>jsx</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> title = <span class="xml"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;title&quot;</span>&gt;</span>Hello, world!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>这并不是一段正常的js代码，更不是一段正常的html代码，这被称为jsx语法糖，是一种js的扩展语法。</p>
-<p>jsx不能被浏览器识别，需要使用babel进行转换，被转换成以下代码。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> title = React.createElement(</span><br><span class="line">    <span class="string">&#x27;h1&#x27;</span>,</span><br><span class="line">    &#123; <span class="attr">className</span>: <span class="string">&#x27;title&#x27;</span> &#125;,</span><br><span class="line">    <span class="string">&#x27;Hello, world!&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>可以在<a href="babeljs.cn/repl">babel官网</a>测试自己的代码。</p>
-<h2 id="打包脚本的准备"><a href="#打包脚本的准备" class="headerlink" title="打包脚本的准备"></a>打包脚本的准备</h2><p>前面提到浏览器无法识别jsx，所以我们需要babel对代码进行转换</p>
-<p>这里用的parcel</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;presets&quot;: [&quot;env&quot;],</span><br><span class="line">    &quot;plugins&quot;: [</span><br><span class="line">        [&quot;transform-react-jsx&quot;, &#123;</span><br><span class="line">            &quot;pragma&quot;: &quot;React.createElement&quot;</span><br><span class="line">        &#125;]</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="虚拟dom"><a href="#虚拟dom" class="headerlink" title="虚拟dom"></a>虚拟dom</h2><p>jsx片段会被转译成用React.createElement方法包裹的代码。所以第一步，我们来实现这个React.createElement方法。</p>
-<p>首先看参数</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一个参数是DOM节点的标签名</span></span><br><span class="line"><span class="comment">// 第二个参数是一个对象，里面包含了所有的属性</span></span><br><span class="line"><span class="comment">// 第三个参数后，就是它的子节点</span></span><br><span class="line"><span class="function"><span class="title">createElement</span>(<span class="params">tag, attrs, ...children</span>)</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们可以使用这些参数去创建我们的dom节点，这个解析出来的属性我们可以称之为虚拟dom。</p>
-<h2 id="render"><a href="#render" class="headerlink" title="render"></a>render</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.render(</span><br><span class="line">    &lt;h1&gt;Hello, world!&lt;/h1&gt;,</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>babel转化后变成了</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.render(</span><br><span class="line">    React.createElement( <span class="string">&#x27;h1&#x27;</span>, <span class="literal">null</span>, <span class="string">&#x27;Hello, world!&#x27;</span> ),</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>第一个参数就是创建后的dom节点，第二个参数是创建后节点的挂在位置。</p>
-<p>render方法的实现</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"> vnode, container </span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 清除原来的html</span></span><br><span class="line">  container.innerHTML = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="comment">// 文本文字的渲染</span></span><br><span class="line">  <span class="keyword">if</span> ( <span class="keyword">typeof</span> vnode === <span class="string">&#x27;string&#x27;</span> ) &#123;</span><br><span class="line">    <span class="keyword">const</span> textNode = <span class="built_in">document</span>.createTextNode( vnode );</span><br><span class="line">    <span class="keyword">return</span> container.appendChild( textNode );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> dom = <span class="built_in">document</span>.createElement( vnode.tag );</span><br><span class="line">  <span class="keyword">if</span> ( vnode.attrs ) &#123;</span><br><span class="line">    <span class="built_in">Object</span>.keys( vnode.attrs ).forEach( <span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> value = vnode.attrs[ key ];</span><br><span class="line">      setAttribute( dom, key, value );    <span class="comment">// 设置属性</span></span><br><span class="line">    &#125; );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果有子节点还要渲染子节点</span></span><br><span class="line">  vnode.children.forEach( <span class="function"><span class="params">child</span> =&gt;</span> render( child, dom ) );</span><br><span class="line">  <span class="comment">// 挂载dom</span></span><br><span class="line">  <span class="keyword">return</span> container.appendChild( dom );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>设置属性的时候需要考虑到不同的属性之间的差异，比如className、事件处理等等，所以需要进行特殊处理</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setAttribute</span>(<span class="params"> dom, name, value </span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 如果属性名是className，则改回class</span></span><br><span class="line">  <span class="keyword">if</span> ( name === <span class="string">&#x27;className&#x27;</span> ) name = <span class="string">&#x27;class&#x27;</span>;</span><br><span class="line">  <span class="comment">// 如果属性名是onXXX，则是一个事件监听方法</span></span><br><span class="line">  <span class="keyword">if</span> ( <span class="regexp">/on\w+/</span>.test( name ) ) &#123;</span><br><span class="line">  	name = name.toLowerCase();</span><br><span class="line">  	dom[ name ] = value || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  	<span class="comment">// 如果属性名是style，则更新style对象</span></span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> ( name === <span class="string">&#x27;style&#x27;</span> ) &#123;</span><br><span class="line"> 		<span class="keyword">if</span> ( !value || <span class="keyword">typeof</span> value === <span class="string">&#x27;string&#x27;</span> ) &#123;</span><br><span class="line">  	dom.style.cssText = value || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> ( value &amp;&amp; <span class="keyword">typeof</span> value === <span class="string">&#x27;object&#x27;</span> ) &#123;</span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">let</span> name <span class="keyword">in</span> value ) &#123;</span><br><span class="line">    <span class="comment">// 可以通过style=&#123; width: 20 &#125;这种形式来设置样式，可以省略掉单位px</span></span><br><span class="line">      dom.style[ name ] = <span class="keyword">typeof</span> value[ name ] === <span class="string">&#x27;number&#x27;</span> ? value[ name ] + <span class="string">&#x27;px&#x27;</span> : value[ name ];</span><br><span class="line">     &#125;</span><br><span class="line">  <span class="comment">// 普通属性则直接更新属性</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> ( name <span class="keyword">in</span> dom ) &#123;</span><br><span class="line">    dom[ name ] = value || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( value ) &#123;</span><br><span class="line">  	dom.setAttribute( name, value );</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  	dom.removeAttribute( name );</span><br><span class="line">  &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在只是实现了一个简易版本的react，过程也不算很复杂。</p>
-
+<h2 id="jsx"><a href="#jsx" class="headerlink" title="jsx"></a>jsx</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/08/18/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAreact%20%20jsx&%E8%99%9A%E6%8B%9Fdom/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
