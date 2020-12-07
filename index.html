@@ -158,6 +158,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/07/Typescript-1-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="杨晨">
+      <meta itemprop="description" content="悟已往之不谏，知来者之可追">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨晨的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/07/Typescript-1-%E5%8E%9F%E5%A7%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">Typescript(1)原始数据类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-07 09:06:10 / Modified: 09:06:34" itemprop="dateCreated datePublished" datetime="2020-12-07T09:06:10+08:00">2020-12-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>javascript的类型分为两种：原始数据类型和对象类型，原始类型包括：<code>布尔值</code>，<code>数值</code>，<code>字符串</code>，<code>null</code>，<code>undefined</code>以及ES6中的两个新类型<code>Symbol</code>和<code>BigInt</code>。</p>
+<h3 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h3><p>布尔值有两种定义方式：一种是直接使用<code>boolean</code>赋值；一种是通过构造函数赋值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> isFalse: boolean = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="title">constructorFalse</span>: <span class="title">Boolean</span> = <span class="title">new</span> <span class="title">Boolean</span>(<span class="params"><span class="number">0</span></span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用构造函数 Boolean 创造的对象不是布尔值</span></span><br><span class="line"><span class="keyword">let</span> <span class="title">constructorFalse</span>: <span class="title">boolean</span> = <span class="title">new</span> <span class="title">Boolean</span>(<span class="params"><span class="number">0</span></span>);</span><br><span class="line"><span class="comment">// 错误:(11, 5) TS2322: Type &#x27;Boolean&#x27; is not assignable to type &#x27;boolean&#x27;.</span></span><br><span class="line"><span class="comment">// &#x27;boolean&#x27; is a primitive, but &#x27;Boolean&#x27; is a wrapper object. Prefer using &#x27;boolean&#x27; when possible.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这种情况不借用构造函数返回的是 boolean</span></span><br><span class="line"><span class="keyword">let</span> <span class="title">constructorFalse</span>: <span class="title">boolean</span> = <span class="title">Boolean</span>(<span class="params"><span class="number">0</span></span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="数值"><a href="#数值" class="headerlink" title="数值"></a>数值</h3><p>在数值中唯一要注意的就是es6中的二进制和八进制会被编译成10进制的数字。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num: number = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">let</span> binaryNum: number = <span class="number">0b1010</span>;  <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num: number = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">let</span> str: string = <span class="string">&#x27;123&#x27;</span>;</span><br><span class="line">num += str; <span class="comment">// TS2322: Type &#x27;string&#x27; is not assignable to type &#x27;number&#x27;.</span></span><br><span class="line">str += num; <span class="comment">// &#x27;12310&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h3><p><code>JavaScript</code>里面没有空值(<code>void</code>)的概念，在ts中void只能表示没有任何返回值的函数或者一个为 <code>undefined</code> 和 <code>null</code>的变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>): <span class="title">void</span></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> test: <span class="keyword">void</span> = <span class="literal">undefined</span>;</span><br><span class="line"><span class="keyword">let</span> test: <span class="keyword">void</span> = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Null和Undefined"><a href="#Null和Undefined" class="headerlink" title="Null和Undefined"></a><code>Null</code>和<code>Undefined</code></h3><p>在 TypeScript 中，可以使用 <code>null</code> 和 <code>undefined</code> 来定义这两个原始数据类型：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> u: undefinde = <span class="literal">undefined</span>;</span><br><span class="line"><span class="keyword">let</span> n: <span class="literal">null</span> = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这两个类型与void是有区别的，<code>undefined</code>和<code>null</code>是所有类型的子类型，而<code>void</code>则不是。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num: number = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> v: <span class="keyword">void</span>;</span><br><span class="line"><span class="keyword">let</span> num: number = u; <span class="comment">// Type &#x27;void&#x27; is not assignable to type &#x27;number&#x27;.</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/18/test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -640,7 +716,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
